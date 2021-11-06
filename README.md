@@ -1,4 +1,4 @@
-简介: 用 golang 写的 http server,支持 VUE SPA, history 模式,刷新不会404
+简介: 用 golang 写的 http server,支持 VUE SPA, history 模式,刷新不会404,随机端口,自动打开浏览器
 
 # go mod init go_preview
 # go get -v -u github.com/gorilla/mux
