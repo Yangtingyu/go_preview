@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -65,6 +67,11 @@ func GetCurPath() string {
 	return dir
 }
 
+func randomPort() string {
+	rand.Seed(time.Now().UnixNano())
+	return strconv.Itoa(rand.Intn(65535-1024) + 1024)
+}
+
 func openBrowser(url string) {
 	var err error
 
@@ -85,17 +92,18 @@ func openBrowser(url string) {
 }
 
 func main() {
+	port := randomPort()
 	router := mux.NewRouter()
 	fmt.Println(GetCurPath())
 	spa := spaHandler{staticPath: "dist", indexPath: "index.html"}
 	router.PathPrefix("/").Handler(spa)
 
-	fmt.Println("服务启动成功，请用浏览器打开 http://127.0.0.1:5555 ")
-	openBrowser("http://127.0.0.1:5555")
+	fmt.Println("服务启动成功，请用浏览器打开 http://127.0.0.1:" + port)
+	openBrowser("http://127.0.0.1:" + port)
 
 	srv := &http.Server{
 		Handler: router,
-		Addr:    "127.0.0.1:5555",
+		Addr:    "127.0.0.1:" + port,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
